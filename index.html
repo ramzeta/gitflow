@@ -469,6 +469,12 @@
                 font-size: 0.75rem;
                 overflow-x: auto;
                 white-space: pre;
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+
+            .code-block::-webkit-scrollbar {
+                display: none;
             }
 
             .branch-legend {
@@ -485,9 +491,10 @@
             }
 
             .command-list .cmd {
-                font-size: 0.75rem;
+                font-size: 0.7rem;
                 white-space: nowrap;
-                overflow-x: auto;
+                overflow: hidden;
+                text-overflow: ellipsis;
                 display: block;
                 max-width: 100%;
             }
