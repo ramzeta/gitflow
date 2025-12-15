@@ -465,16 +465,17 @@
             }
 
             .code-block {
-                padding: 1rem;
-                font-size: 0.75rem;
-                overflow-x: auto;
-                white-space: pre;
-                -ms-overflow-style: none;
-                scrollbar-width: none;
+                padding: 0.75rem;
+                font-size: 0.65rem;
+                overflow: hidden;
+                white-space: normal;
+                word-wrap: break-word;
             }
 
-            .code-block::-webkit-scrollbar {
-                display: none;
+            .code-block .command,
+            .code-block .argument,
+            .code-block .comment {
+                display: inline;
             }
 
             .branch-legend {
@@ -589,8 +590,8 @@
             }
 
             .code-block {
-                font-size: 0.8rem;
-                overflow-x: auto;
+                font-size: 0.75rem;
+                overflow: hidden;
             }
 
             .scene-indicator {
