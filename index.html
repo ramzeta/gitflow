@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Flow - Guia Visual 3D Interactiva</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --master: #e74c3c;
+            --develop: #3498db;
+            --feature: #2ecc71;
+            --release: #f39c12;
+            --hotfix: #e91e63;
+            --bg-dark: #0a0a0f;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        html, body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: #fff;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Three.js Canvas */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* Content Overlay */
+        .content {
+            position: relative;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .content > * {
+            pointer-events: auto;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to bottom, rgba(10, 10, 15, 0.9), transparent);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        nav.scrolled {
+            background: rgba(10, 10, 15, 0.95);
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, var(--feature), var(--develop));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .nav-link {
+            padding: 0.5rem 1rem;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .nav-link.active {
+            background: var(--develop);
+            border-color: var(--develop);
+        }
+
+        /* Sections */
+        section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 6rem 4rem;
+            position: relative;
+        }
+
+        .section-content {
+            max-width: 600px;
+            position: relative;
+        }
+
+        .section-content.right {
+            margin-left: auto;
+        }
+
+        .section-tag {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+            color: var(--develop);
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #fff, #a0a0a0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 2rem;
+        }
+
+        /* Glass Card */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .glass-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .glass-card p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.7;
+        }
+
+        /* Code Block */
+        .code-block {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .code-block .command {
+            color: var(--feature);
+        }
+
+        .code-block .argument {
+            color: var(--release);
+        }
+
+        .code-block .comment {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Branch Colors */
+        .branch-master { color: var(--master); }
+        .branch-develop { color: var(--develop); }
+        .branch-feature { color: var(--feature); }
+        .branch-release { color: var(--release); }
+        .branch-hotfix { color: var(--hotfix); }
+
+        /* Branch Legend */
+        .branch-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--glass);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .hero-title {
+            font-size: 5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.6);
+            max-width: 600px;
+            margin-bottom: 3rem;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        .mouse-icon {
+            width: 24px;
+            height: 40px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .mouse-icon::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 2px;
+            animation: scroll 2s infinite;
+        }
+
+        @keyframes scroll {
+            0%, 100% { opacity: 1; top: 8px; }
+            50% { opacity: 0.3; top: 16px; }
+        }
+
+        /* Stars Rating */
+        .stars {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 2rem 0;
+            font-size: 1.5rem;
+            color: var(--release);
+        }
+
+        /* Tips */
+        .tip {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(52, 152, 219, 0.1);
+            border-left: 3px solid var(--develop);
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+        }
+
+        .tip-icon {
+            font-size: 1.5rem;
+        }
+
+        .tip-content {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Command List */
+        .command-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .command-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .command-list li:last-child {
+            border-bottom: none;
+        }
+
+        .command-list .cmd {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        /* Flow Diagram Section */
+        .flow-section {
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .flow-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 2rem 1rem;
+            text-align: center;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.3));
+            position: relative;
+            z-index: 10;
+        }
+
+        footer p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        footer a {
+            color: var(--develop);
+            text-decoration: none;
+        }
+
+        /* Prevent content overflow */
+        .content {
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
+
+        /* Responsive - Mobile First */
+        @media (max-width: 480px) {
+            nav {
+                padding: 0.75rem 1rem;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+                padding: 0 0.5rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .section-description {
+                font-size: 0.95rem;
+            }
+
+            section {
+                padding: 3rem 1rem;
+                min-height: auto;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .section-content {
+                max-width: 100%;
+            }
+
+            .section-content.right {
+                margin-left: 0;
+            }
+
+            .glass-card {
+                padding: 1.25rem;
+            }
+
+            .glass-card h3 {
+                font-size: 1rem;
+            }
+
+            .code-block {
+                padding: 1rem;
+                font-size: 0.7rem;
+                word-break: break-word;
+                white-space: pre-wrap;
+            }
+
+            .branch-legend {
+                gap: 0.5rem;
+                justify-content: center;
+            }
+
+            footer {
+                padding: 1.5rem 1rem;
+            }
+
+            footer p {
+                font-size: 0.75rem;
+            }
+
+            .command-list .cmd {
+                font-size: 0.7rem;
+                white-space: normal;
+                word-break: break-all;
+            }
+
+            .command-list li {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .legend-item {
+                padding: 0.4rem 0.75rem;
+                font-size: 0.75rem;
+            }
+
+            .scene-indicator {
+                right: 0.75rem;
+            }
+
+            .scene-dot {
+                width: 8px;
+                height: 8px;
+            }
+
+            .scroll-indicator {
+                display: none;
+            }
+
+            .mouse-icon {
+                display: none;
+            }
+
+            .hero {
+                min-height: calc(100vh - 60px);
+                padding: 4rem 1rem 2rem;
+            }
+
+            .tip {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .tip-icon {
+                font-size: 1.2rem;
+            }
+
+            .tip-content {
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 0.75rem 1.25rem;
+            }
+
+            .logo {
+                font-size: 1.3rem;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+                margin-bottom: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+            }
+
+            section {
+                padding: 4rem 1.5rem;
+                min-height: auto;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .section-content {
+                max-width: 100%;
+            }
+
+            .section-content.right {
+                margin-left: 0;
+            }
+
+            .glass-card {
+                padding: 1.5rem;
+            }
+
+            .code-block {
+                font-size: 0.8rem;
+                overflow-x: auto;
+            }
+
+            .scene-indicator {
+                display: none;
+            }
+
+            .scroll-indicator {
+                bottom: 2rem;
+                font-size: 0.8rem;
+            }
+
+            .hero {
+                min-height: calc(100vh - 60px);
+            }
+
+            footer {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 3.5rem;
+            }
+
+            section {
+                padding: 5rem 2rem;
+            }
+
+            .section-content {
+                max-width: 100%;
+            }
+        }
+
+        /* Scene Transitions */
+        .scene-indicator {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .scene-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .scene-dot:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.2);
+        }
+
+        .scene-dot.active {
+            background: var(--develop);
+            box-shadow: 0 0 20px var(--develop);
+        }
+
+        /* Loading Screen */
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-dark);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        #loading.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--glass-border);
+            border-top-color: var(--develop);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        #loading p {
+            margin-top: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: rgba(255, 255, 255, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading">
+        <div class="loader"></div>
+        <p>Inicializando git flow...</p>
+    </div>
+
+    <!-- 3D Canvas -->
+    <div id="canvas-container"></div>
+
+    <!-- Scene Indicators -->
+    <div class="scene-indicator">
+        <div class="scene-dot active" data-section="hero" title="Inicio"></div>
+        <div class="scene-dot" data-section="intro" title="Introduccion"></div>
+        <div class="scene-dot" data-section="init" title="Inicializacion"></div>
+        <div class="scene-dot" data-section="feature" title="Features"></div>
+        <div class="scene-dot" data-section="release" title="Releases"></div>
+        <div class="scene-dot" data-section="hotfix" title="Hotfixes"></div>
+        <div class="scene-dot" data-section="commands" title="Comandos"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <span>git</span> flow
+        </div>
+        <div class="nav-links">
+            <a class="nav-link" href="#intro">Intro</a>
+            <a class="nav-link" href="#feature">Features</a>
+            <a class="nav-link" href="#release">Releases</a>
+            <a class="nav-link" href="#hotfix">Hotfixes</a>
+            <a class="nav-link" href="#commands">Comandos</a>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="content">
+        <!-- Hero Section -->
+        <section class="hero" id="hero">
+            <div class="section-tag">Guia Visual Interactiva</div>
+            <h1 class="hero-title">
+                <span class="gradient-text">Git Flow</span>
+            </h1>
+            <p class="hero-subtitle">
+                Un modelo de ramificacion para Git que hace tu desarrollo mas organizado y tu equipo mas productivo.
+            </p>
+            <div class="branch-legend">
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--master)"></div>
+                    master
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--develop)"></div>
+                    develop
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--feature)"></div>
+                    feature
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--release)"></div>
+                    release
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: var(--hotfix)"></div>
+                    hotfix
+                </div>
+            </div>
+            <div class="scroll-indicator">
+                <div class="mouse-icon"></div>
+                <span>Scroll para explorar</span>
+            </div>
+        </section>
+
+        <!-- Intro Section -->
+        <section id="intro">
+            <div class="section-content">
+                <div class="section-tag">Conceptos Basicos</div>
+                <h2 class="section-title gradient-text">Que es Git Flow?</h2>
+                <p class="section-description">
+                    Git Flow es un conjunto de extensiones para Git que proveen comandos de alto nivel
+                    para operar repositorios basados en el modelo de ramificaciones de Vincent Driessen.
+                </p>
+                <div class="stars">
+                    <span>★</span><span>★</span><span>★</span>
+                </div>
+                <div class="glass-card">
+                    <h3>💡 Consejos Basicos</h3>
+                    <ul class="command-list">
+                        <li>Git Flow provee excelente ayuda en linea de comandos</li>
+                        <li>Sourcetree (OSX/Windows) tiene soporte nativo para git-flow</li>
+                        <li>Funciona basandose en fusiones (merge), no en rebase</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Init Section -->
+        <section id="init">
+            <div class="section-content right">
+                <div class="section-tag">Configuracion</div>
+                <h2 class="section-title gradient-text">Inicializacion</h2>
+                <p class="section-description">
+                    Git Flow necesita ser inicializado para alterar la configuracion del proyecto.
+                    Comienza desde un repositorio git existente.
+                </p>
+                <div class="code-block">
+                    <span class="comment"># Inicializar git-flow en tu proyecto</span><br>
+                    <span class="command">git flow</span> <span class="argument">init</span>
+                </div>
+                <div class="tip">
+                    <span class="tip-icon">📋</span>
+                    <div class="tip-content">
+                        Deberas contestar algunas preguntas sobre convenciones de nombres.
+                        Se recomienda usar los valores predeterminados.
+                    </div>
+                </div>
+                <div class="glass-card">
+                    <h3>📦 Instalacion</h3>
+                    <div class="code-block">
+                        <span class="comment"># macOS (Homebrew)</span><br>
+                        <span class="command">brew install</span> git-flow-avh<br><br>
+                        <span class="comment"># Linux (Debian/Ubuntu)</span><br>
+                        <span class="command">apt-get install</span> git-flow<br><br>
+                        <span class="comment"># macOS (MacPorts)</span><br>
+                        <span class="command">port install</span> git-flow-avh
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Feature Section -->
+        <section id="feature">
+            <div class="section-content">
+                <div class="section-tag" style="border-color: var(--feature); color: var(--feature)">Features</div>
+                <h2 class="section-title"><span class="branch-feature">feature/</span> branches</h2>
+                <p class="section-description">
+                    Las ramas de caracteristicas se utilizan para desarrollar nuevas funcionalidades
+                    para futuras versiones. Parten de <code class="branch-develop">develop</code> y
+                    se fusionan de vuelta a ella.
+                </p>
+                <div class="glass-card">
+                    <h3>🚀 Comenzar una Feature</h3>
+                    <div class="code-block">
+                        <span class="command">git flow feature start</span> <span class="argument">MYFEATURE</span>
+                    </div>
+                    <p>Crea una nueva rama derivada de 'develop' y cambia a ella.</p>
+                </div>
+                <div class="glass-card">
+                    <h3>✅ Finalizar una Feature</h3>
+                    <div class="code-block">
+                        <span class="command">git flow feature finish</span> <span class="argument">MYFEATURE</span>
+                    </div>
+                    <p>Fusiona la rama en 'develop', la elimina y vuelve a 'develop'.</p>
+                </div>
+                <div class="glass-card">
+                    <h3>📤 Publicar una Feature</h3>
+                    <div class="code-block">
+                        <span class="command">git flow feature publish</span> <span class="argument">MYFEATURE</span>
+                    </div>
+                    <p>Comparte tu feature con otros desarrolladores.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Release Section -->
+        <section id="release">
+            <div class="section-content right">
+                <div class="section-tag" style="border-color: var(--release); color: var(--release)">Releases</div>
+                <h2 class="section-title"><span class="branch-release">release/</span> branches</h2>
+                <p class="section-description">
+                    Prepara una version para produccion. Permite arreglos menores y la preparacion
+                    de metadatos para la publicacion.
+                </p>
+                <div class="glass-card">
+                    <h3>📦 Comenzar un Release</h3>
+                    <div class="code-block">
+                        <span class="command">git flow release start</span> <span class="argument">1.0.0</span>
+                    </div>
+                    <p>Crea una rama de publicacion derivada de 'develop'.</p>
+                </div>
+                <div class="glass-card">
+                    <h3>🏁 Finalizar un Release</h3>
+                    <div class="code-block">
+                        <span class="command">git flow release finish</span> <span class="argument">1.0.0</span>
+                    </div>
+                    <p>
+                        Fusiona en 'master' y 'develop', crea el tag, y elimina la rama.
+                    </p>
+                </div>
+                <div class="tip">
+                    <span class="tip-icon">🏷️</span>
+                    <div class="tip-content">
+                        No olvides hacer push de los tags:<br>
+                        <code>git push --tags</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hotfix Section -->
+        <section id="hotfix">
+            <div class="section-content">
+                <div class="section-tag" style="border-color: var(--hotfix); color: var(--hotfix)">Hotfixes</div>
+                <h2 class="section-title"><span class="branch-hotfix">hotfix/</span> branches</h2>
+                <p class="section-description">
+                    Los hotfixes surgen de la necesidad de actuar inmediatamente cuando hay un
+                    problema critico en produccion. Se ramifican desde <code class="branch-master">master</code>.
+                </p>
+                <div class="glass-card">
+                    <h3>🔥 Comenzar un Hotfix</h3>
+                    <div class="code-block">
+                        <span class="command">git flow hotfix start</span> <span class="argument">1.0.1</span>
+                    </div>
+                    <p>Crea una rama de revision desde 'master' para arreglos urgentes.</p>
+                </div>
+                <div class="glass-card">
+                    <h3>✅ Finalizar un Hotfix</h3>
+                    <div class="code-block">
+                        <span class="command">git flow hotfix finish</span> <span class="argument">1.0.1</span>
+                    </div>
+                    <p>Fusiona en 'master' y 'develop', crea el tag y elimina la rama.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Commands Section -->
+        <section id="commands">
+            <div class="section-content" style="max-width: 800px; margin: 0 auto;">
+                <div class="section-tag">Referencia Rapida</div>
+                <h2 class="section-title gradient-text">Todos los Comandos</h2>
+                <div class="glass-card">
+                    <h3 class="branch-feature">Feature Commands</h3>
+                    <ul class="command-list">
+                        <li>
+                            <span class="cmd">git flow feature start NAME</span>
+                            <span>Inicia nueva feature</span>
+                        </li>
+                        <li>
+                            <span class="cmd">git flow feature finish NAME</span>
+                            <span>Finaliza y fusiona</span>
+                        </li>
+                        <li>
+                            <span class="cmd">git flow feature publish NAME</span>
+                            <span>Publica en remoto</span>
+                        </li>
+                        <li>
+                            <span class="cmd">git flow feature pull origin NAME</span>
+                            <span>Obtiene feature remota</span>
+                        </li>
+                        <li>
+                            <span class="cmd">git flow feature track NAME</span>
+                            <span>Sigue feature remota</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="glass-card">
+                    <h3 class="branch-release">Release Commands</h3>
+                    <ul class="command-list">
+                        <li>
+                            <span class="cmd">git flow release start VERSION</span>
+                            <span>Inicia release</span>
+                        </li>
+                        <li>
+                            <span class="cmd">git flow release finish VERSION</span>
+                            <span>Finaliza release</span>
+                        </li>
+                        <li>
+                            <span class="cmd">git flow release publish VERSION</span>
+                            <span>Publica release</span>
+                        </li>
+                        <li>
+                            <span class="cmd">git flow release track VERSION</span>
+                            <span>Sigue release remota</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="glass-card">
+                    <h3 class="branch-hotfix">Hotfix Commands</h3>
+                    <ul class="command-list">
+                        <li>
+                            <span class="cmd">git flow hotfix start VERSION</span>
+                            <span>Inicia hotfix</span>
+                        </li>
+                        <li>
+                            <span class="cmd">git flow hotfix finish VERSION</span>
+                            <span>Finaliza hotfix</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>
+                Creado con Three.js |
+                <a href="https://ramzeta.xyz">ramzeta.xyz</a> |
+                Basado en el modelo de Vincent Driessen
+            </p>
+        </footer>
+    </div>
+
+    <!-- Three.js -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script>
+        // ============================================
+        // GIT FLOW 3D VISUALIZATION
+        // ============================================
+
+        const GitFlow3D = {
+            scene: null,
+            camera: null,
+            renderer: null,
+            branches: {},
+            commits: [],
+            particles: null,
+            mouse: { x: 0, y: 0 },
+            targetRotation: { x: 0, y: 0 },
+            currentSection: 'hero',
+            animationTime: 0,
+
+            // Branch colors
+            colors: {
+                master: 0xe74c3c,
+                develop: 0x3498db,
+                feature: 0x2ecc71,
+                release: 0xf39c12,
+                hotfix: 0xe91e63
+            },
+
+            init() {
+                this.createScene();
+                this.createLights();
+                this.createParticles();
+                this.createBranches();
+                this.createCommits();
+                this.setupEvents();
+                this.animate();
+
+                // Hide loading screen
+                setTimeout(() => {
+                    document.getElementById('loading').classList.add('hidden');
+                }, 1500);
+            },
+
+            createScene() {
+                const container = document.getElementById('canvas-container');
+
+                // Scene
+                this.scene = new THREE.Scene();
+                this.scene.fog = new THREE.Fog(0x0a0a0f, 10, 50);
+
+                // Camera
+                this.camera = new THREE.PerspectiveCamera(
+                    60,
+                    window.innerWidth / window.innerHeight,
+                    0.1,
+                    1000
+                );
+                this.camera.position.set(0, 5, 15);
+                this.camera.lookAt(0, 0, 0);
+
+                // Renderer
+                this.renderer = new THREE.WebGLRenderer({
+                    antialias: true,
+                    alpha: true
+                });
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                this.renderer.setClearColor(0x0a0a0f, 1);
+                container.appendChild(this.renderer.domElement);
+            },
+
+            createLights() {
+                // Ambient light
+                const ambient = new THREE.AmbientLight(0xffffff, 0.3);
+                this.scene.add(ambient);
+
+                // Main directional light
+                const directional = new THREE.DirectionalLight(0xffffff, 0.8);
+                directional.position.set(5, 10, 7);
+                this.scene.add(directional);
+
+                // Colored point lights
+                const blueLight = new THREE.PointLight(0x3498db, 1, 20);
+                blueLight.position.set(-5, 5, 5);
+                this.scene.add(blueLight);
+
+                const greenLight = new THREE.PointLight(0x2ecc71, 0.8, 20);
+                greenLight.position.set(5, -3, 5);
+                this.scene.add(greenLight);
+
+                const redLight = new THREE.PointLight(0xe74c3c, 0.6, 20);
+                redLight.position.set(0, 8, -5);
+                this.scene.add(redLight);
+            },
+
+            createParticles() {
+                const particleCount = 500;
+                const positions = new Float32Array(particleCount * 3);
+                const colors = new Float32Array(particleCount * 3);
+                const sizes = new Float32Array(particleCount);
+
+                for (let i = 0; i < particleCount; i++) {
+                    // Position
+                    positions[i * 3] = (Math.random() - 0.5) * 60;
+                    positions[i * 3 + 1] = (Math.random() - 0.5) * 40;
+                    positions[i * 3 + 2] = (Math.random() - 0.5) * 40 - 10;
+
+                    // Color (mix of branch colors)
+                    const colorChoice = Math.random();
+                    let color;
+                    if (colorChoice < 0.2) color = new THREE.Color(0xe74c3c);
+                    else if (colorChoice < 0.4) color = new THREE.Color(0x3498db);
+                    else if (colorChoice < 0.6) color = new THREE.Color(0x2ecc71);
+                    else if (colorChoice < 0.8) color = new THREE.Color(0xf39c12);
+                    else color = new THREE.Color(0xffffff);
+
+                    colors[i * 3] = color.r;
+                    colors[i * 3 + 1] = color.g;
+                    colors[i * 3 + 2] = color.b;
+
+                    // Size
+                    sizes[i] = Math.random() * 2 + 0.5;
+                }
+
+                const geometry = new THREE.BufferGeometry();
+                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+                geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+                const material = new THREE.PointsMaterial({
+                    size: 0.1,
+                    vertexColors: true,
+                    transparent: true,
+                    opacity: 0.6,
+                    blending: THREE.AdditiveBlending
+                });
+
+                this.particles = new THREE.Points(geometry, material);
+                this.scene.add(this.particles);
+            },
+
+            createBranch(name, color, startY, points) {
+                const curve = new THREE.CatmullRomCurve3(points);
+                const tubeGeometry = new THREE.TubeGeometry(curve, 64, 0.08, 8, false);
+
+                const material = new THREE.MeshStandardMaterial({
+                    color: color,
+                    emissive: color,
+                    emissiveIntensity: 0.3,
+                    metalness: 0.5,
+                    roughness: 0.3
+                });
+
+                const tube = new THREE.Mesh(tubeGeometry, material);
+                tube.name = name;
+
+                // Glow effect
+                const glowMaterial = new THREE.MeshBasicMaterial({
+                    color: color,
+                    transparent: true,
+                    opacity: 0.15
+                });
+                const glowTube = new THREE.Mesh(
+                    new THREE.TubeGeometry(curve, 64, 0.2, 8, false),
+                    glowMaterial
+                );
+
+                const group = new THREE.Group();
+                group.add(tube);
+                group.add(glowTube);
+
+                this.branches[name] = { group, curve, color };
+                this.scene.add(group);
+
+                return { group, curve };
+            },
+
+            createBranches() {
+                // Master branch (horizontal, top)
+                this.createBranch('master', this.colors.master, 3, [
+                    new THREE.Vector3(-12, 3, 0),
+                    new THREE.Vector3(-6, 3, 0),
+                    new THREE.Vector3(0, 3, 0),
+                    new THREE.Vector3(6, 3, 0),
+                    new THREE.Vector3(12, 3, 0)
+                ]);
+
+                // Develop branch (horizontal, middle)
+                this.createBranch('develop', this.colors.develop, 0, [
+                    new THREE.Vector3(-12, 0, 0),
+                    new THREE.Vector3(-6, 0, 0),
+                    new THREE.Vector3(0, 0, 0),
+                    new THREE.Vector3(6, 0, 0),
+                    new THREE.Vector3(12, 0, 0)
+                ]);
+
+                // Feature branch (curved from develop)
+                this.createBranch('feature', this.colors.feature, -3, [
+                    new THREE.Vector3(-4, 0, 0),
+                    new THREE.Vector3(-3, -1, 1),
+                    new THREE.Vector3(-1, -2, 2),
+                    new THREE.Vector3(1, -2.5, 2),
+                    new THREE.Vector3(3, -2, 1.5),
+                    new THREE.Vector3(4, 0, 0)
+                ]);
+
+                // Release branch (from develop to master)
+                this.createBranch('release', this.colors.release, 1.5, [
+                    new THREE.Vector3(2, 0, 0),
+                    new THREE.Vector3(3, 0.5, 1),
+                    new THREE.Vector3(4, 1.5, 1.5),
+                    new THREE.Vector3(5, 2.5, 1),
+                    new THREE.Vector3(6, 3, 0)
+                ]);
+
+                // Hotfix branch (from master, quick fix)
+                this.createBranch('hotfix', this.colors.hotfix, 1.5, [
+                    new THREE.Vector3(-2, 3, 0),
+                    new THREE.Vector3(-1, 2, -1.5),
+                    new THREE.Vector3(0, 1, -2),
+                    new THREE.Vector3(1, 0, -1.5),
+                    new THREE.Vector3(2, 0, 0)
+                ]);
+            },
+
+            createCommit(x, y, z, color, size = 0.25) {
+                const geometry = new THREE.SphereGeometry(size, 16, 16);
+                const material = new THREE.MeshStandardMaterial({
+                    color: color,
+                    emissive: color,
+                    emissiveIntensity: 0.5,
+                    metalness: 0.7,
+                    roughness: 0.2
+                });
+
+                const commit = new THREE.Mesh(geometry, material);
+                commit.position.set(x, y, z);
+
+                // Glow
+                const glowGeometry = new THREE.SphereGeometry(size * 1.5, 16, 16);
+                const glowMaterial = new THREE.MeshBasicMaterial({
+                    color: color,
+                    transparent: true,
+                    opacity: 0.2
+                });
+                const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+                commit.add(glow);
+
+                this.commits.push(commit);
+                this.scene.add(commit);
+
+                return commit;
+            },
+
+            createCommits() {
+                // Master commits
+                [-8, -4, 0, 6, 10].forEach(x => {
+                    this.createCommit(x, 3, 0, this.colors.master);
+                });
+
+                // Develop commits
+                [-10, -6, -2, 2, 4, 8].forEach(x => {
+                    this.createCommit(x, 0, 0, this.colors.develop);
+                });
+
+                // Feature commits
+                this.createCommit(-2, -1.5, 1.5, this.colors.feature);
+                this.createCommit(0, -2.2, 2, this.colors.feature);
+                this.createCommit(2, -1.8, 1.8, this.colors.feature);
+
+                // Release commit
+                this.createCommit(4, 1.5, 1.2, this.colors.release);
+
+                // Hotfix commit
+                this.createCommit(0, 1, -1.8, this.colors.hotfix);
+            },
+
+            setupEvents() {
+                // Mouse move
+                window.addEventListener('mousemove', (e) => {
+                    this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+                    this.mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+                });
+
+                // Resize
+                window.addEventListener('resize', () => {
+                    this.camera.aspect = window.innerWidth / window.innerHeight;
+                    this.camera.updateProjectionMatrix();
+                    this.renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+
+                // Scroll
+                window.addEventListener('scroll', () => {
+                    this.updateSceneOnScroll();
+                });
+
+                // Scene dots
+                document.querySelectorAll('.scene-dot').forEach(dot => {
+                    dot.addEventListener('click', () => {
+                        const section = dot.dataset.section;
+                        document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' });
+                    });
+                });
+
+                // Nav scroll effect
+                window.addEventListener('scroll', () => {
+                    const nav = document.querySelector('nav');
+                    if (window.scrollY > 100) {
+                        nav.classList.add('scrolled');
+                    } else {
+                        nav.classList.remove('scrolled');
+                    }
+                });
+            },
+
+            updateSceneOnScroll() {
+                const sections = ['hero', 'intro', 'init', 'feature', 'release', 'hotfix', 'commands'];
+                const scrollY = window.scrollY;
+                const windowHeight = window.innerHeight;
+
+                // Find current section
+                let currentIdx = 0;
+                sections.forEach((section, idx) => {
+                    const el = document.getElementById(section);
+                    if (el) {
+                        const rect = el.getBoundingClientRect();
+                        if (rect.top < windowHeight / 2) {
+                            currentIdx = idx;
+                            this.currentSection = section;
+                        }
+                    }
+                });
+
+                // Update scene dots
+                document.querySelectorAll('.scene-dot').forEach((dot, idx) => {
+                    dot.classList.toggle('active', idx === currentIdx);
+                });
+
+                // Camera position based on section
+                const progress = scrollY / (document.body.scrollHeight - windowHeight);
+
+                // Move camera
+                this.targetRotation.y = progress * Math.PI * 0.5;
+                this.targetRotation.x = Math.sin(progress * Math.PI) * 0.2;
+
+                // Highlight relevant branch
+                this.highlightBranch(this.currentSection);
+            },
+
+            highlightBranch(section) {
+                const branchMap = {
+                    hero: null,
+                    intro: null,
+                    init: 'develop',
+                    feature: 'feature',
+                    release: 'release',
+                    hotfix: 'hotfix',
+                    commands: null
+                };
+
+                const activeBranch = branchMap[section];
+
+                Object.entries(this.branches).forEach(([name, data]) => {
+                    const intensity = name === activeBranch ? 0.6 : 0.2;
+                    const opacity = name === activeBranch ? 0.3 : 0.1;
+
+                    data.group.children.forEach((child, idx) => {
+                        if (idx === 0 && child.material) {
+                            child.material.emissiveIntensity = intensity;
+                        }
+                        if (idx === 1 && child.material) {
+                            child.material.opacity = opacity;
+                        }
+                    });
+                });
+            },
+
+            animate() {
+                requestAnimationFrame(() => this.animate());
+
+                this.animationTime += 0.01;
+
+                // Smooth camera rotation based on mouse and scroll
+                this.camera.position.x += (this.mouse.x * 3 - this.camera.position.x) * 0.02;
+                this.camera.position.y += (5 + this.mouse.y * 2 - this.camera.position.y) * 0.02;
+
+                // Rotate scene slightly
+                this.scene.rotation.y += (this.targetRotation.y - this.scene.rotation.y) * 0.05;
+                this.scene.rotation.x += (this.targetRotation.x - this.scene.rotation.x) * 0.05;
+
+                this.camera.lookAt(0, 0, 0);
+
+                // Animate particles
+                if (this.particles) {
+                    this.particles.rotation.y += 0.0005;
+                    this.particles.rotation.x += 0.0002;
+                }
+
+                // Animate commits (pulse effect)
+                this.commits.forEach((commit, idx) => {
+                    const scale = 1 + Math.sin(this.animationTime * 2 + idx) * 0.1;
+                    commit.scale.set(scale, scale, scale);
+                });
+
+                // Animate branches (subtle wave)
+                Object.values(this.branches).forEach((data, idx) => {
+                    data.group.rotation.z = Math.sin(this.animationTime + idx) * 0.02;
+                });
+
+                this.renderer.render(this.scene, this.camera);
+            }
+        };
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            GitFlow3D.init();
+        });
+    </script>
+</body>
+</html>
