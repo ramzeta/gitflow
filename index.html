@@ -386,6 +386,192 @@
             margin-bottom: 2rem;
         }
 
+        /* Interactive Examples Section */
+        .examples-section {
+            padding: 4rem 2rem;
+            background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.5), transparent);
+        }
+
+        .examples-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .examples-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .example-tab {
+            padding: 1rem 2rem;
+            background: var(--glass);
+            border: 2px solid var(--glass-border);
+            border-radius: 12px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .example-tab:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .example-tab.active {
+            border-color: var(--develop);
+            background: rgba(52, 152, 219, 0.2);
+        }
+
+        .example-tab.feature-tab.active {
+            border-color: var(--feature);
+            background: rgba(46, 204, 113, 0.2);
+        }
+
+        .example-tab.release-tab.active {
+            border-color: var(--release);
+            background: rgba(243, 156, 18, 0.2);
+        }
+
+        .example-tab.hotfix-tab.active {
+            border-color: var(--hotfix);
+            background: rgba(233, 30, 99, 0.2);
+        }
+
+        .example-viewer {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .example-canvas {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 100%);
+        }
+
+        .example-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--glass);
+            border: 2px solid var(--glass-border);
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.1);
+        }
+
+        .control-btn.play-btn {
+            width: 60px;
+            height: 60px;
+            background: var(--develop);
+            border-color: var(--develop);
+        }
+
+        .control-btn.play-btn:hover {
+            box-shadow: 0 0 30px rgba(52, 152, 219, 0.5);
+        }
+
+        .step-indicator {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0 2rem;
+        }
+
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+        }
+
+        .step-dot.active {
+            background: var(--develop);
+            box-shadow: 0 0 10px var(--develop);
+        }
+
+        .step-dot.completed {
+            background: var(--feature);
+        }
+
+        .example-info {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .step-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            color: var(--develop);
+            margin-bottom: 0.5rem;
+        }
+
+        .step-description {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+        }
+
+        .step-command {
+            margin-top: 1rem;
+            padding: 0.75rem 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--feature);
+        }
+
+        @media (max-width: 768px) {
+            .example-canvas {
+                height: 300px;
+            }
+
+            .examples-tabs {
+                gap: 0.5rem;
+            }
+
+            .example-tab {
+                padding: 0.75rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .control-btn {
+                width: 40px;
+                height: 40px;
+            }
+
+            .control-btn.play-btn {
+                width: 50px;
+                height: 50px;
+            }
+        }
+
         /* Footer */
         footer {
             padding: 2rem 1rem;
@@ -711,6 +897,7 @@
     <!-- Scene Indicators -->
     <div class="scene-indicator">
         <div class="scene-dot active" data-section="hero" title="Inicio"></div>
+        <div class="scene-dot" data-section="examples" title="Ejemplos"></div>
         <div class="scene-dot" data-section="intro" title="Introduccion"></div>
         <div class="scene-dot" data-section="init" title="Inicializacion"></div>
         <div class="scene-dot" data-section="feature" title="Features"></div>
@@ -725,6 +912,7 @@
             <span>git</span> flow
         </div>
         <div class="nav-links">
+            <a class="nav-link" href="#examples">Ejemplos</a>
             <a class="nav-link" href="#intro">Intro</a>
             <a class="nav-link" href="#feature">Features</a>
             <a class="nav-link" href="#release">Releases</a>
@@ -769,6 +957,63 @@
             <div class="scroll-indicator">
                 <div class="mouse-icon"></div>
                 <span>Scroll para explorar</span>
+            </div>
+        </section>
+
+        <!-- Interactive Examples Section -->
+        <section class="examples-section" id="examples">
+            <div class="examples-container">
+                <div class="section-tag" style="text-align: center; display: block; margin: 0 auto 1rem;">Ejemplos Interactivos</div>
+                <h2 class="section-title gradient-text" style="text-align: center; margin-bottom: 2rem;">Visualiza cada flujo en accion</h2>
+
+                <div class="examples-tabs">
+                    <button class="example-tab feature-tab active" data-example="feature">
+                        Feature Branch
+                    </button>
+                    <button class="example-tab release-tab" data-example="release">
+                        Release Branch
+                    </button>
+                    <button class="example-tab hotfix-tab" data-example="hotfix">
+                        Hotfix Branch
+                    </button>
+                </div>
+
+                <div class="example-viewer">
+                    <div class="example-canvas" id="example-canvas"></div>
+                    <div class="example-controls">
+                        <button class="control-btn" id="btn-prev" title="Paso anterior">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                            </svg>
+                        </button>
+                        <div class="step-indicator" id="step-indicator"></div>
+                        <button class="control-btn play-btn" id="btn-play" title="Reproducir">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" id="play-icon">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </button>
+                        <div class="step-indicator" id="step-indicator-right"></div>
+                        <button class="control-btn" id="btn-next" title="Siguiente paso">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+                            </svg>
+                        </button>
+                        <button class="control-btn" id="btn-reset" title="Reiniciar">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="example-info">
+                        <div class="step-title" id="step-title">Paso 1: Estado inicial</div>
+                        <div class="step-description" id="step-description">
+                            Las ramas master (roja) y develop (azul) estan en paralelo. Develop contiene el codigo en desarrollo activo.
+                        </div>
+                        <div class="step-command" id="step-command">
+                            # Estado inicial del repositorio
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -1317,7 +1562,7 @@
             },
 
             updateSceneOnScroll() {
-                const sections = ['hero', 'intro', 'init', 'feature', 'release', 'hotfix', 'commands'];
+                const sections = ['hero', 'examples', 'intro', 'init', 'feature', 'release', 'hotfix', 'commands'];
                 const scrollY = window.scrollY;
                 const windowHeight = window.innerHeight;
 
@@ -1353,6 +1598,7 @@
             highlightBranch(section) {
                 const branchMap = {
                     hero: null,
+                    examples: null,
                     intro: null,
                     init: 'develop',
                     feature: 'feature',
@@ -1418,6 +1664,706 @@
         document.addEventListener('DOMContentLoaded', () => {
             GitFlow3D.init();
         });
+    </script>
+
+    <!-- Interactive Examples Animation -->
+    <script>
+        // ============================================
+        // INTERACTIVE EXAMPLES - GIT FLOW ANIMATIONS
+        // ============================================
+
+        const ExamplesAnimation = {
+            scene: null,
+            camera: null,
+            renderer: null,
+            container: null,
+            branches: {},
+            commits: [],
+            labels: [],
+            currentExample: 'feature',
+            currentStep: 0,
+            isPlaying: false,
+            playInterval: null,
+            animationFrame: null,
+
+            colors: {
+                master: 0xe74c3c,
+                develop: 0x3498db,
+                feature: 0x2ecc71,
+                release: 0xf39c12,
+                hotfix: 0xe91e63
+            },
+
+            // Feature branch steps
+            featureSteps: [
+                {
+                    title: "Paso 1: Estado inicial",
+                    description: "Las ramas master (roja) y develop (azul) corren en paralelo. Develop contiene el codigo base para el desarrollo.",
+                    command: "git checkout develop"
+                },
+                {
+                    title: "Paso 2: Crear feature branch",
+                    description: "Se crea una nueva rama feature desde develop para trabajar en la funcionalidad 'login'.",
+                    command: "git flow feature start login"
+                },
+                {
+                    title: "Paso 3: Desarrollo en feature",
+                    description: "Se realizan commits en la rama feature mientras se desarrolla la funcionalidad.",
+                    command: "git commit -m 'Add login form'"
+                },
+                {
+                    title: "Paso 4: Mas commits en feature",
+                    description: "Se continua el desarrollo con mas commits para completar la funcionalidad.",
+                    command: "git commit -m 'Add authentication logic'"
+                },
+                {
+                    title: "Paso 5: Finalizar feature",
+                    description: "La feature se fusiona de vuelta a develop. La rama feature se elimina.",
+                    command: "git flow feature finish login"
+                }
+            ],
+
+            // Release branch steps
+            releaseSteps: [
+                {
+                    title: "Paso 1: Estado inicial",
+                    description: "Develop tiene todas las features listas para la proxima version. Master esta en produccion.",
+                    command: "git checkout develop"
+                },
+                {
+                    title: "Paso 2: Crear release branch",
+                    description: "Se crea una rama release para preparar la version 1.0.0.",
+                    command: "git flow release start 1.0.0"
+                },
+                {
+                    title: "Paso 3: Preparar release",
+                    description: "Se hacen ajustes menores, se actualiza la version y se preparan metadatos.",
+                    command: "git commit -m 'Bump version to 1.0.0'"
+                },
+                {
+                    title: "Paso 4: Finalizar release",
+                    description: "La release se fusiona a master Y a develop. Se crea un tag con la version.",
+                    command: "git flow release finish 1.0.0"
+                },
+                {
+                    title: "Paso 5: Tag en produccion",
+                    description: "Master ahora tiene el tag v1.0.0 y esta listo para deploy a produccion.",
+                    command: "git push --tags"
+                }
+            ],
+
+            // Hotfix branch steps
+            hotfixSteps: [
+                {
+                    title: "Paso 1: Bug critico en produccion",
+                    description: "Se detecta un bug critico en produccion (master). Necesita arreglo urgente.",
+                    command: "git checkout master"
+                },
+                {
+                    title: "Paso 2: Crear hotfix branch",
+                    description: "Se crea una rama hotfix directamente desde master para el arreglo urgente.",
+                    command: "git flow hotfix start 1.0.1"
+                },
+                {
+                    title: "Paso 3: Aplicar el fix",
+                    description: "Se implementa el arreglo del bug critico en la rama hotfix.",
+                    command: "git commit -m 'Fix critical security bug'"
+                },
+                {
+                    title: "Paso 4: Finalizar hotfix",
+                    description: "El hotfix se fusiona tanto a master como a develop para mantener sincronizado.",
+                    command: "git flow hotfix finish 1.0.1"
+                },
+                {
+                    title: "Paso 5: Deploy inmediato",
+                    description: "Master tiene el fix con tag v1.0.1. Listo para deploy de emergencia.",
+                    command: "git push origin master --tags"
+                }
+            ],
+
+            init() {
+                this.container = document.getElementById('example-canvas');
+                if (!this.container) return;
+
+                this.createScene();
+                this.createLights();
+                this.setupControls();
+                this.loadExample('feature');
+                this.animate();
+            },
+
+            createScene() {
+                // Scene
+                this.scene = new THREE.Scene();
+                this.scene.background = new THREE.Color(0x0a0a0f);
+
+                // Camera
+                const aspect = this.container.clientWidth / this.container.clientHeight;
+                this.camera = new THREE.PerspectiveCamera(50, aspect, 0.1, 1000);
+                this.camera.position.set(0, 2, 12);
+                this.camera.lookAt(0, 0, 0);
+
+                // Renderer
+                this.renderer = new THREE.WebGLRenderer({ antialias: true });
+                this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+                this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                this.container.appendChild(this.renderer.domElement);
+
+                // Resize handler
+                window.addEventListener('resize', () => {
+                    if (!this.container) return;
+                    const aspect = this.container.clientWidth / this.container.clientHeight;
+                    this.camera.aspect = aspect;
+                    this.camera.updateProjectionMatrix();
+                    this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
+                });
+            },
+
+            createLights() {
+                const ambient = new THREE.AmbientLight(0xffffff, 0.4);
+                this.scene.add(ambient);
+
+                const directional = new THREE.DirectionalLight(0xffffff, 0.8);
+                directional.position.set(5, 10, 7);
+                this.scene.add(directional);
+
+                const blueLight = new THREE.PointLight(0x3498db, 0.5, 20);
+                blueLight.position.set(-5, 3, 5);
+                this.scene.add(blueLight);
+
+                const greenLight = new THREE.PointLight(0x2ecc71, 0.5, 20);
+                greenLight.position.set(5, -2, 5);
+                this.scene.add(greenLight);
+            },
+
+            clearScene() {
+                // Remove all branches and commits
+                Object.values(this.branches).forEach(branch => {
+                    this.scene.remove(branch.group);
+                });
+                this.commits.forEach(commit => {
+                    this.scene.remove(commit);
+                });
+                this.labels.forEach(label => {
+                    this.scene.remove(label);
+                });
+                this.branches = {};
+                this.commits = [];
+                this.labels = [];
+            },
+
+            createBranch(name, color, points, visible = true) {
+                const curve = new THREE.CatmullRomCurve3(points);
+                const tubeGeometry = new THREE.TubeGeometry(curve, 64, 0.06, 8, false);
+
+                const material = new THREE.MeshStandardMaterial({
+                    color: color,
+                    emissive: color,
+                    emissiveIntensity: 0.4,
+                    metalness: 0.5,
+                    roughness: 0.3,
+                    transparent: true,
+                    opacity: visible ? 1 : 0
+                });
+
+                const tube = new THREE.Mesh(tubeGeometry, material);
+
+                // Glow
+                const glowMaterial = new THREE.MeshBasicMaterial({
+                    color: color,
+                    transparent: true,
+                    opacity: visible ? 0.2 : 0
+                });
+                const glowTube = new THREE.Mesh(
+                    new THREE.TubeGeometry(curve, 64, 0.15, 8, false),
+                    glowMaterial
+                );
+
+                const group = new THREE.Group();
+                group.add(tube);
+                group.add(glowTube);
+
+                this.branches[name] = { group, curve, color, material, glowMaterial };
+                this.scene.add(group);
+
+                return { group, curve };
+            },
+
+            createCommit(x, y, z, color, visible = true, scale = 1) {
+                const geometry = new THREE.SphereGeometry(0.2 * scale, 16, 16);
+                const material = new THREE.MeshStandardMaterial({
+                    color: color,
+                    emissive: color,
+                    emissiveIntensity: 0.5,
+                    metalness: 0.7,
+                    roughness: 0.2,
+                    transparent: true,
+                    opacity: visible ? 1 : 0
+                });
+
+                const commit = new THREE.Mesh(geometry, material);
+                commit.position.set(x, y, z);
+                commit.userData = { targetOpacity: visible ? 1 : 0 };
+
+                // Glow
+                const glowGeometry = new THREE.SphereGeometry(0.35 * scale, 16, 16);
+                const glowMaterial = new THREE.MeshBasicMaterial({
+                    color: color,
+                    transparent: true,
+                    opacity: visible ? 0.3 : 0
+                });
+                const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+                commit.add(glow);
+                commit.userData.glowMaterial = glowMaterial;
+
+                this.commits.push(commit);
+                this.scene.add(commit);
+
+                return commit;
+            },
+
+            showElement(element, show = true) {
+                if (element.material) {
+                    element.userData.targetOpacity = show ? 1 : 0;
+                }
+            },
+
+            animateElementOpacity(element, targetOpacity, duration = 500) {
+                const startOpacity = element.material.opacity;
+                const startTime = Date.now();
+
+                const animate = () => {
+                    const elapsed = Date.now() - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const eased = 1 - Math.pow(1 - progress, 3);
+
+                    element.material.opacity = startOpacity + (targetOpacity - startOpacity) * eased;
+                    if (element.userData.glowMaterial) {
+                        element.userData.glowMaterial.opacity = (startOpacity + (targetOpacity - startOpacity) * eased) * 0.3;
+                    }
+
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    }
+                };
+                animate();
+            },
+
+            loadExample(type) {
+                this.clearScene();
+                this.currentExample = type;
+                this.currentStep = 0;
+
+                // Update tabs
+                document.querySelectorAll('.example-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                    if (tab.dataset.example === type) {
+                        tab.classList.add('active');
+                    }
+                });
+
+                // Create base branches
+                this.createBranch('master', this.colors.master, [
+                    new THREE.Vector3(-6, 1.5, 0),
+                    new THREE.Vector3(-3, 1.5, 0),
+                    new THREE.Vector3(0, 1.5, 0),
+                    new THREE.Vector3(3, 1.5, 0),
+                    new THREE.Vector3(6, 1.5, 0)
+                ]);
+
+                this.createBranch('develop', this.colors.develop, [
+                    new THREE.Vector3(-6, 0, 0),
+                    new THREE.Vector3(-3, 0, 0),
+                    new THREE.Vector3(0, 0, 0),
+                    new THREE.Vector3(3, 0, 0),
+                    new THREE.Vector3(6, 0, 0)
+                ]);
+
+                // Initial commits
+                this.createCommit(-5, 1.5, 0, this.colors.master);
+                this.createCommit(-2, 1.5, 0, this.colors.master);
+                this.createCommit(-5, 0, 0, this.colors.develop);
+                this.createCommit(-3, 0, 0, this.colors.develop);
+                this.createCommit(-1, 0, 0, this.colors.develop);
+
+                // Create type-specific branches (hidden initially)
+                if (type === 'feature') {
+                    this.createBranch('feature', this.colors.feature, [
+                        new THREE.Vector3(-1, 0, 0),
+                        new THREE.Vector3(0, -0.8, 0.8),
+                        new THREE.Vector3(1.5, -1.2, 1),
+                        new THREE.Vector3(3, -0.8, 0.8),
+                        new THREE.Vector3(4, 0, 0)
+                    ], false);
+
+                    // Feature commits (hidden)
+                    this.createCommit(0.5, -1, 0.9, this.colors.feature, false);
+                    this.createCommit(2, -1.1, 1, this.colors.feature, false);
+                    this.createCommit(4, 0, 0, this.colors.develop, false);
+
+                } else if (type === 'release') {
+                    this.createBranch('release', this.colors.release, [
+                        new THREE.Vector3(0, 0, 0),
+                        new THREE.Vector3(1, 0.5, 0.8),
+                        new THREE.Vector3(2, 1, 1),
+                        new THREE.Vector3(3, 1.5, 0.5),
+                        new THREE.Vector3(4, 1.5, 0)
+                    ], false);
+
+                    // Release commits (hidden)
+                    this.createCommit(1.5, 0.7, 0.9, this.colors.release, false);
+                    this.createCommit(4, 1.5, 0, this.colors.master, false);
+                    this.createCommit(4, 0, 0, this.colors.develop, false);
+
+                } else if (type === 'hotfix') {
+                    this.createBranch('hotfix', this.colors.hotfix, [
+                        new THREE.Vector3(-2, 1.5, 0),
+                        new THREE.Vector3(-1, 0.8, -0.8),
+                        new THREE.Vector3(0, 0.3, -1),
+                        new THREE.Vector3(1, 0.8, -0.8),
+                        new THREE.Vector3(2, 1.5, 0)
+                    ], false);
+
+                    // Additional merge line to develop
+                    this.createBranch('hotfix-merge', this.colors.hotfix, [
+                        new THREE.Vector3(1, 0.8, -0.8),
+                        new THREE.Vector3(1.5, 0.4, -0.4),
+                        new THREE.Vector3(2, 0, 0)
+                    ], false);
+
+                    // Hotfix commits (hidden)
+                    this.createCommit(0, 0.3, -1, this.colors.hotfix, false);
+                    this.createCommit(2, 1.5, 0, this.colors.master, false);
+                    this.createCommit(2, 0, 0, this.colors.develop, false);
+                }
+
+                this.updateStepIndicator();
+                this.updateStepInfo();
+            },
+
+            getSteps() {
+                switch (this.currentExample) {
+                    case 'feature': return this.featureSteps;
+                    case 'release': return this.releaseSteps;
+                    case 'hotfix': return this.hotfixSteps;
+                    default: return this.featureSteps;
+                }
+            },
+
+            updateStepIndicator() {
+                const steps = this.getSteps();
+                const indicator = document.getElementById('step-indicator');
+                indicator.innerHTML = '';
+
+                steps.forEach((_, idx) => {
+                    const dot = document.createElement('div');
+                    dot.className = 'step-dot';
+                    if (idx === this.currentStep) dot.classList.add('active');
+                    if (idx < this.currentStep) dot.classList.add('completed');
+                    indicator.appendChild(dot);
+                });
+            },
+
+            updateStepInfo() {
+                const steps = this.getSteps();
+                const step = steps[this.currentStep];
+
+                document.getElementById('step-title').textContent = step.title;
+                document.getElementById('step-description').textContent = step.description;
+                document.getElementById('step-command').textContent = step.command;
+
+                // Update title color based on example type
+                const titleEl = document.getElementById('step-title');
+                switch (this.currentExample) {
+                    case 'feature':
+                        titleEl.style.color = '#2ecc71';
+                        break;
+                    case 'release':
+                        titleEl.style.color = '#f39c12';
+                        break;
+                    case 'hotfix':
+                        titleEl.style.color = '#e91e63';
+                        break;
+                }
+            },
+
+            applyStep() {
+                const type = this.currentExample;
+                const step = this.currentStep;
+
+                if (type === 'feature') {
+                    this.applyFeatureStep(step);
+                } else if (type === 'release') {
+                    this.applyReleaseStep(step);
+                } else if (type === 'hotfix') {
+                    this.applyHotfixStep(step);
+                }
+
+                this.updateStepIndicator();
+                this.updateStepInfo();
+            },
+
+            applyFeatureStep(step) {
+                const featureBranch = this.branches['feature'];
+
+                switch (step) {
+                    case 0: // Initial state
+                        if (featureBranch) {
+                            featureBranch.material.opacity = 0;
+                            featureBranch.glowMaterial.opacity = 0;
+                        }
+                        this.commits.slice(5).forEach(c => {
+                            c.material.opacity = 0;
+                            if (c.userData.glowMaterial) c.userData.glowMaterial.opacity = 0;
+                        });
+                        break;
+
+                    case 1: // Create feature branch
+                        if (featureBranch) {
+                            featureBranch.material.opacity = 1;
+                            featureBranch.glowMaterial.opacity = 0.2;
+                        }
+                        break;
+
+                    case 2: // First commit
+                        if (this.commits[5]) {
+                            this.animateElementOpacity(this.commits[5], 1);
+                        }
+                        break;
+
+                    case 3: // Second commit
+                        if (this.commits[6]) {
+                            this.animateElementOpacity(this.commits[6], 1);
+                        }
+                        break;
+
+                    case 4: // Merge back
+                        if (this.commits[7]) {
+                            this.animateElementOpacity(this.commits[7], 1);
+                        }
+                        // Fade feature branch
+                        if (featureBranch) {
+                            setTimeout(() => {
+                                featureBranch.material.opacity = 0.3;
+                                featureBranch.glowMaterial.opacity = 0.1;
+                            }, 500);
+                        }
+                        break;
+                }
+            },
+
+            applyReleaseStep(step) {
+                const releaseBranch = this.branches['release'];
+
+                switch (step) {
+                    case 0: // Initial state
+                        if (releaseBranch) {
+                            releaseBranch.material.opacity = 0;
+                            releaseBranch.glowMaterial.opacity = 0;
+                        }
+                        this.commits.slice(5).forEach(c => {
+                            c.material.opacity = 0;
+                            if (c.userData.glowMaterial) c.userData.glowMaterial.opacity = 0;
+                        });
+                        break;
+
+                    case 1: // Create release branch
+                        if (releaseBranch) {
+                            releaseBranch.material.opacity = 1;
+                            releaseBranch.glowMaterial.opacity = 0.2;
+                        }
+                        break;
+
+                    case 2: // Bump version commit
+                        if (this.commits[5]) {
+                            this.animateElementOpacity(this.commits[5], 1);
+                        }
+                        break;
+
+                    case 3: // Merge to master
+                        if (this.commits[6]) {
+                            this.animateElementOpacity(this.commits[6], 1);
+                        }
+                        break;
+
+                    case 4: // Tag and merge to develop
+                        if (this.commits[7]) {
+                            this.animateElementOpacity(this.commits[7], 1);
+                        }
+                        if (releaseBranch) {
+                            releaseBranch.material.opacity = 0.3;
+                            releaseBranch.glowMaterial.opacity = 0.1;
+                        }
+                        break;
+                }
+            },
+
+            applyHotfixStep(step) {
+                const hotfixBranch = this.branches['hotfix'];
+                const hotfixMerge = this.branches['hotfix-merge'];
+
+                switch (step) {
+                    case 0: // Initial state - bug detected
+                        if (hotfixBranch) {
+                            hotfixBranch.material.opacity = 0;
+                            hotfixBranch.glowMaterial.opacity = 0;
+                        }
+                        if (hotfixMerge) {
+                            hotfixMerge.material.opacity = 0;
+                            hotfixMerge.glowMaterial.opacity = 0;
+                        }
+                        this.commits.slice(5).forEach(c => {
+                            c.material.opacity = 0;
+                            if (c.userData.glowMaterial) c.userData.glowMaterial.opacity = 0;
+                        });
+                        break;
+
+                    case 1: // Create hotfix branch
+                        if (hotfixBranch) {
+                            hotfixBranch.material.opacity = 1;
+                            hotfixBranch.glowMaterial.opacity = 0.2;
+                        }
+                        break;
+
+                    case 2: // Fix commit
+                        if (this.commits[5]) {
+                            this.animateElementOpacity(this.commits[5], 1);
+                        }
+                        break;
+
+                    case 3: // Merge to master and develop
+                        if (this.commits[6]) {
+                            this.animateElementOpacity(this.commits[6], 1);
+                        }
+                        if (hotfixMerge) {
+                            hotfixMerge.material.opacity = 1;
+                            hotfixMerge.glowMaterial.opacity = 0.2;
+                        }
+                        if (this.commits[7]) {
+                            this.animateElementOpacity(this.commits[7], 1);
+                        }
+                        break;
+
+                    case 4: // Tag in production
+                        if (hotfixBranch) {
+                            hotfixBranch.material.opacity = 0.3;
+                            hotfixBranch.glowMaterial.opacity = 0.1;
+                        }
+                        if (hotfixMerge) {
+                            hotfixMerge.material.opacity = 0.3;
+                            hotfixMerge.glowMaterial.opacity = 0.1;
+                        }
+                        break;
+                }
+            },
+
+            nextStep() {
+                const steps = this.getSteps();
+                if (this.currentStep < steps.length - 1) {
+                    this.currentStep++;
+                    this.applyStep();
+                } else {
+                    this.stopPlaying();
+                }
+            },
+
+            prevStep() {
+                if (this.currentStep > 0) {
+                    this.currentStep--;
+                    // Reset and replay to current step
+                    this.loadExample(this.currentExample);
+                    for (let i = 0; i <= this.currentStep; i++) {
+                        setTimeout(() => {
+                            this.currentStep = i;
+                            this.applyStep();
+                        }, i * 100);
+                    }
+                }
+            },
+
+            reset() {
+                this.stopPlaying();
+                this.loadExample(this.currentExample);
+            },
+
+            togglePlay() {
+                if (this.isPlaying) {
+                    this.stopPlaying();
+                } else {
+                    this.startPlaying();
+                }
+            },
+
+            startPlaying() {
+                this.isPlaying = true;
+                document.getElementById('play-icon').innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+
+                this.playInterval = setInterval(() => {
+                    this.nextStep();
+                }, 2000);
+            },
+
+            stopPlaying() {
+                this.isPlaying = false;
+                document.getElementById('play-icon').innerHTML = '<path d="M8 5v14l11-7z"/>';
+
+                if (this.playInterval) {
+                    clearInterval(this.playInterval);
+                    this.playInterval = null;
+                }
+            },
+
+            setupControls() {
+                // Tab buttons
+                document.querySelectorAll('.example-tab').forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        this.stopPlaying();
+                        this.loadExample(tab.dataset.example);
+                    });
+                });
+
+                // Control buttons
+                document.getElementById('btn-prev')?.addEventListener('click', () => {
+                    this.stopPlaying();
+                    this.prevStep();
+                });
+
+                document.getElementById('btn-next')?.addEventListener('click', () => {
+                    this.stopPlaying();
+                    this.nextStep();
+                });
+
+                document.getElementById('btn-play')?.addEventListener('click', () => {
+                    this.togglePlay();
+                });
+
+                document.getElementById('btn-reset')?.addEventListener('click', () => {
+                    this.reset();
+                });
+            },
+
+            animate() {
+                this.animationFrame = requestAnimationFrame(() => this.animate());
+
+                // Subtle rotation
+                this.scene.rotation.y = Math.sin(Date.now() * 0.0003) * 0.1;
+
+                // Pulse commits
+                this.commits.forEach((commit, idx) => {
+                    if (commit.material.opacity > 0.5) {
+                        const scale = 1 + Math.sin(Date.now() * 0.003 + idx) * 0.08;
+                        commit.scale.set(scale, scale, scale);
+                    }
+                });
+
+                this.renderer.render(this.scene, this.camera);
+            }
+        };
+
+        // Initialize examples animation after main animation
+        setTimeout(() => {
+            ExamplesAnimation.init();
+        }, 2000);
     </script>
 </body>
 </html>
